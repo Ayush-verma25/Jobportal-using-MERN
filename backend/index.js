@@ -26,10 +26,10 @@ app.use(cors(corsOptions));
 const PORT = process.env.PORT || 3000;
 
 // api's
-app.use("https://jobportal-using-mern-backend.onrender.com/user", userRoute);
-app.use("https://jobportal-using-mern-backend.onrender.com/company", companyRoute);
-app.use("https://jobportal-using-mern-backend.onrender.com/job", jobRoute);
-app.use("https://jobportal-using-mern-backend.onrender.com/application", applicationRoute);
+app.use("/user", userRoute);
+app.use("/company", companyRoute);
+app.use("/job", jobRoute);
+app.use("/application", applicationRoute);
 
 app.get("/", (req, res) => {
   res.send("API Working");
