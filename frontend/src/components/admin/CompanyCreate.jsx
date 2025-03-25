@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import Navbar from '../shared/Navbar';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
@@ -10,26 +10,12 @@ import { toast } from 'sonner';
 import { COMPANY_API_END_POINT } from '@/utils/constant';
 import { setSingleCompany } from '@/redux/companySlice';
 
-// Define types
-interface CompanyResponse {
-  success: boolean;
-  message: string;
-  company: {
-    _id: string;
-    name: string;
-  };
-}
-
-interface ErrorResponse {
-  message?: string;
-}
-
-const CompanyCreate: React.FC = () => {
+const CompanyCreate = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [companyName, setCompanyName] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [companyName, setCompanyName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const registerNewCompany = useCallback(async () => {
     if (!companyName.trim()) {
@@ -41,7 +27,7 @@ const CompanyCreate: React.FC = () => {
     setError(null);
 
     try {
-      const res = await axios.post<CompanyResponse>(
+      const res = await axios.post(
         `${COMPANY_API_END_POINT}/register`,
         { companyName },
         {
@@ -60,11 +46,10 @@ const CompanyCreate: React.FC = () => {
         throw new Error('Registration failed');
       }
     } catch (err) {
-      const error = err as AxiosError<ErrorResponse>;
-      const errorMessage = error.response?.data?.message || 'Failed to register company';
+      const errorMessage = err.response?.data?.message || 'Failed to register company';
       setError(errorMessage);
       toast.error(errorMessage);
-      console.error('Registration error:', error);
+      console.error('Registration error:', err);
     } finally {
       setIsLoading(false);
     }
