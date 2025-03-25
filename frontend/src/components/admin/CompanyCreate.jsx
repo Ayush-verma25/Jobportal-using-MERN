@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -17,9 +17,21 @@ const CompanyCreate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Check if the user is authenticated (e.g., by checking for a valid token in localStorage or cookies)
+  const isAuthenticated = () => {
+    const token = localStorage.getItem('authToken'); // Assuming you store the token in localStorage
+    return token !== null;
+  };
+
   const registerNewCompany = useCallback(async () => {
     if (!companyName.trim()) {
       toast.error('Company name is required');
+      return;
+    }
+
+    if (!isAuthenticated()) {
+      toast.error('User not authenticated. Please log in.');
+      navigate('/login'); // Redirect to login if the user is not authenticated
       return;
     }
 
